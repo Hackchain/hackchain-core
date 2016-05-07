@@ -1,4 +1,6 @@
 # Hackchain-core
+[![Build Status](https://secure.travis-ci.org/hackchain/hackchain-core.png)](http://travis-ci.org/hackchain/hackchain-core)
+[![NPM version](https://badge.fury.io/js/hackchain-core.svg)](http://badge.fury.io/js/hackchain-core)
 
 A core module for [hackchain][0].
 
