@@ -1,10 +1,10 @@
 # Hackchain-core
 
-A core module
+A core module for [hackchain][0].
 
 ### Bugs
 
-If any bugs, please [file an issue][0]. We will make sure to figure it out!
+If any bugs, please [file an issue][1]. We will make sure to figure it out!
 
 #### LICENSE
 
@@ -31,4 +31,5 @@ DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-[0]: https://github.com/hackchain/hackchain-core/issues
+[0]: https://github.com/hackchain/hackchain
+[1]: https://github.com/hackchain/hackchain-core/issues
