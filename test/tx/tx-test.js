@@ -99,6 +99,24 @@ describe('TX', () => {
     assert.equal(tx.outputs[0].script.opcodes.length, 0);
   });
 
+  it('should render/parse empty coinbase tx', () => {
+    const coin = new TX();
+    coin.input(hackchain.constants.genesis, -1, new TX.Script());
+    coin.output(new BN(0), new TX.Script());
+
+    const wbuf = new WBuf();
+    coin.render(wbuf);
+
+    const raw = Buffer.concat(wbuf.render());
+
+    const obuf = new OBuf();
+    obuf.push(raw);
+
+    const copy = TX.parse(obuf);
+
+    assert.equal(copy.inspect(), coin.inspect());
+  });
+
   it('should fail to parse TX without header', () => {
     const buf = new OBuf();
 
