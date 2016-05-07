@@ -26,7 +26,8 @@ describe('Pool', () => {
     const tx = new TX();
 
     tx.input(block.txs[0].hash(), 0, new Script());
-    tx.output(new BN(block.txs[0].outputs[0].value.sub(fee)), new Script());
+    tx.output(new BN(block.txs[0].outputs[0].value.sub(fee)),
+              new TX.Script(hackchain.constants.hltScript));
 
     return tx;
   }

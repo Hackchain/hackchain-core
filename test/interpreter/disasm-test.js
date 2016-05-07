@@ -103,11 +103,6 @@ describe('Interpreter/Disassembler', () => {
     check([ { type: 'irq', cmd: 'yield' } ]);
   });
 
-  it('should parse `irq(FAILURE)`', () => {
-    asm.irq('failure');
-    check([ { type: 'irq', cmd: 'failure' } ]);
-  });
-
   it('should zero-pad', () => {
     asm.buffer.writeUInt8(0);
     check([ { type: 'add', a: 0, b: 0, c: 0 } ]);

@@ -91,6 +91,14 @@ describe('Interpreter/Macro-Assembler', () => {
     ]);
   });
 
+  it('should generate `hlt`', () => {
+    asm.hlt();
+
+    check([
+      { type: 'beq', a: 0, b: 0, imm: -1 }
+    ]);
+  });
+
   describe('named labels', () => {
     it('should generate named `jump`', () => {
       asm.jmp('lbl');

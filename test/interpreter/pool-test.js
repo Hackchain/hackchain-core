@@ -55,13 +55,14 @@ describe('Interpreter/Pool', () => {
   test('unconditional success', (asm) => {
     asm.irq('success');
   }, (asm) => {
-    asm.irq('failure');
+    asm.hlt();
   });
 
   test('unconditional failure', (asm) => {
-    asm.irq('failure');
+    asm.irq('yield');
+    asm.hlt();
   }, (asm) => {
-    asm.irq('failure');
+    asm.hlt();
   }, (success) => {
     assert(!success);
   });

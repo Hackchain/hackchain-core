@@ -34,13 +34,17 @@ describe('Interpreter/Thread', () => {
       const contents = Buffer.concat(buf.render());
       contents.copy(memory);
 
-      while (!thread.isDone())
+      const MAX = 1000;
+      let i;
+      for (i = 0; i < MAX && !thread.isDone(); i++)
         thread.runOne();
 
+      const success = i < MAX;
+
       if (!check)
-        assert(thread.isSuccess());
+        assert(success);
       else
-        check(thread);
+        check(thread, success);
     });
   }
 
@@ -53,12 +57,6 @@ describe('Interpreter/Thread', () => {
       asm.irq('yield');
     }, (thread) => {
       assert(thread.isYield());
-    });
-
-    test('it should support FAILURE', (asm) => {
-      asm.irq('failure');
-    }, (thread) => {
-      assert(thread.isFailure());
     });
   });
 
@@ -180,7 +178,8 @@ describe('Interpreter/Thread', () => {
   describe('beq', () => {
     test('it should jump if equal', (asm) => {
       asm.beq('r0', 'r0', 1);
-      asm.irq('failure');
+
+      asm.beq('r0', 'r0', -1);
 
       asm.irq('success');
     });
@@ -190,7 +189,7 @@ describe('Interpreter/Thread', () => {
       asm.beq('r0', 'r1', 1);
       asm.irq('success');
 
-      asm.irq('failure');
+      asm.beq('r0', 'r0', -1);
     });
   });
 
@@ -198,7 +197,8 @@ describe('Interpreter/Thread', () => {
     test('it should jump and link', (asm) => {
       asm.addi('r2', 'r2', 3);
       asm.jalr('r1', 'r2');
-      asm.irq('failure');
+
+      asm.beq('r0', 'r0', -1);
 
       asm.irq('success');
     }, (thread) => {

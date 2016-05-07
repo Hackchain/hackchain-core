@@ -50,21 +50,24 @@ describe('Interpreter', () => {
   test('unconditional success', (asm) => {
     asm.irq('success');
   }, (asm) => {
-    asm.irq('failure');
+    asm.hlt();
   });
 
   test('unconditional failure', (asm) => {
-    asm.irq('failure');
+    asm.irq('yield');
+    asm.hlt();
   }, (asm) => {
-    asm.irq('failure');
+    asm.hlt();
   }, (success) => {
     assert(!success);
   });
 
-  test('timing out output', (asm) => {
-    asm.beq('r0', 'r0', -1);
+  test('timing out output prerun', (asm) => {
+    asm.hlt();
   }, (asm) => {
-    asm.irq('failure');
+    asm.hlt();
+  }, (success) => {
+    assert(success);
   });
 
   test('yield success (setting value)', (asm) => {

@@ -98,9 +98,4 @@ describe('Interpreter/Assembler', () => {
     asm.irq('yield');
     check('e081');
   });
-
-  it('should generate `irq(FAILURE)`', () => {
-    asm.irq('failure');
-    check('e101');
-  });
 });
