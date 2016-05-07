@@ -85,6 +85,28 @@ describe('Block', () => {
     assert.equal(block.txs[0].outputs.length, 1);
   });
 
+  it('should render/parse block with empty coinbase', () => {
+    const block = new Block(hackchain.constants.genesis);
+
+    const coin = new TX();
+    coin.input(hackchain.constants.genesis, -1, new TX.Script());
+    coin.output(new BN(0), new TX.Script());
+
+    block.addCoinbase(coin);
+
+    const wbuf = new WBuf();
+    block.render(wbuf);
+
+    const raw = Buffer.concat(wbuf.render());
+
+    const obuf = new OBuf();
+    obuf.push(raw);
+
+    const copy = Block.parse(obuf);
+
+    assert.equal(copy.inspect(), block.inspect());
+  });
+
   it('should fail to parse Block without header', () => {
     const buf = new OBuf();
 
