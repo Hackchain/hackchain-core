@@ -40,7 +40,7 @@ describe('Interpreter/Disassembler', () => {
 
   it('should parse `invalid-add`', () => {
     asm.buffer.writeUInt16BE(0x0008);
-    check([ { type: '<invalid add>' } ]);
+    check([ { type: '<invalid add>', raw: 0x0008 } ]);
   });
 
   it('should parse positive `addi`', () => {
@@ -60,7 +60,7 @@ describe('Interpreter/Disassembler', () => {
 
   it('should parse `invalid-nand`', () => {
     asm.buffer.writeUInt16BE(0x4008);
-    check([ { type: '<invalid nand>' } ]);
+    check([ { type: '<invalid nand>', raw: 0x4008 } ]);
   });
 
   it('should parse `lui`', () => {
@@ -90,7 +90,7 @@ describe('Interpreter/Disassembler', () => {
 
   it('should parse `invalid-jalr`', () => {
     asm.buffer.writeUInt16BE(0xe002);
-    check([ { type: '<invalid jalr>' } ]);
+    check([ { type: '<invalid jalr>', raw: 0xe002 } ]);
   });
 
   it('should parse `irq(SUCCESS)`', () => {

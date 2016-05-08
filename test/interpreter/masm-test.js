@@ -99,6 +99,36 @@ describe('Interpreter/Macro-Assembler', () => {
     ]);
   });
 
+  it('should generate `data`', () => {
+    asm.data(0xffff);
+
+    check([
+      { type: '<invalid jalr>', raw: 0xffff }
+    ]);
+  });
+
+  it('should generate backward-looking `lea`', () => {
+    asm.codeOffset(0x1001);
+    asm.bind('lbl');
+    asm.lea('r1', 'lbl');
+
+    check([
+      { type: 'lui', a: 1, imm: 64 },
+      { type: 'addi', a: 1, b: 1, imm: 1 }
+    ]);
+  });
+
+  it('should generate forward-looking `lea`', () => {
+    asm.codeOffset(0x1000);
+    asm.lea('r1', 'lbl');
+    asm.bind('lbl');
+
+    check([
+      { type: 'lui', a: 1, imm: 64 },
+      { type: 'addi', a: 1, b: 1, imm: 2 }
+    ]);
+  });
+
   describe('named labels', () => {
     it('should generate named `jump`', () => {
       asm.jmp('lbl');
