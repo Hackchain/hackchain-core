@@ -48,7 +48,10 @@ describe('Pool', () => {
         coinbaseInterval: 0
       });
 
-      pool.mint(coinbase, done);
+      pool.init((err) => {
+        assert(!err);
+        pool.mint(coinbase, done);
+      });
     });
   });
 
@@ -182,6 +185,50 @@ describe('Pool', () => {
         assert.deepEqual(fees, [ 5, 3, 2 ]);
 
         callback(null);
+      }
+    ], done);
+  });
+
+  it('should load TXs on restart', (done) => {
+    async.waterfall([
+      (callback) => {
+        async.timesSeries(3, (i, callback) => {
+          pool.mint(coinbase, callback);
+        }, callback);
+      },
+      (blocks, callback) => {
+        const txs = [
+          feeTX(blocks[0], new BN(3)),
+          feeTX(blocks[1], new BN(1)),
+          feeTX(blocks[2], new BN(2))
+        ];
+
+        async.forEach(txs, (tx, callback) => {
+          pool.accept(tx, callback);
+        }, (err) => {
+          callback(err, txs);
+        });
+      },
+      (txs, callback) => {
+        pool = new Pool(chain, {
+          size: 3,
+          interval: 0,
+          coinbaseInterval: 0
+        });
+
+        pool.init((err) => {
+          callback(err, txs);
+        });
+      },
+      (txs, callback) => {
+        async.forEach(txs, (tx, callback) => {
+          pool.accept(tx, (err) => {
+            assert(err);
+            assert(/Double-spend attempt/.test(err.message));
+
+            callback(null);
+          });
+        }, callback);
       }
     ], done);
   });

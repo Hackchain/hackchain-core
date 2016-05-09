@@ -36,6 +36,21 @@ describe('Chain', () => {
     chain = null;
   });
 
+  it('should store/load pool state', (done) => {
+    async.waterfall([
+      (callback) => {
+        chain.storePoolState({ a: 1, b: 2 }, callback);
+      },
+      (callback) => {
+        chain.getPoolState(callback);
+      },
+      (state, callback) => {
+        assert.deepEqual(state, { a: 1, b: 2 });
+        callback(null);
+      }
+    ], done);
+  });
+
   it('should store/load block', (done) => {
     const b = new Block(hackchain.constants.empty);
 
