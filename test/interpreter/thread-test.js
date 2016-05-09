@@ -191,6 +191,25 @@ describe('Interpreter/Thread', () => {
 
       asm.beq('r0', 'r0', -1);
     });
+
+    test('it should work with high addresses', (asm) => {
+      asm.movi('r1', 0x8000);
+      asm.lea('r2', 'data');
+
+      asm.lw('r3', 'r2', 0);
+      asm.sw('r3', 'r1', 0);
+      asm.lw('r3', 'r2', 1);
+      asm.sw('r3', 'r1', 1);
+      asm.lw('r3', 'r2', 2);
+      asm.sw('r3', 'r1', 2);
+
+      asm.jalr('r0', 'r1');
+
+      asm.bind('data');
+      asm.beq('r0', 'r0', 1);
+      asm.hlt();
+      asm.irq('success');
+    });
   });
 
   describe('jalr', () => {
