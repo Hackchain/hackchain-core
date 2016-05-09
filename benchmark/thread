@@ -7,25 +7,43 @@ const WBuf = require('wbuf');
 const hackchain = require('../');
 
 const Interpreter = hackchain.Interpreter;
-const asm = new Interpreter.Assembler();
 
-// hlt
-asm.jalr('r0', 'r0');
+function run(name, count, body) {
+  const asm = new Interpreter.Assembler();
 
-const buf = new WBuf();
-asm.render(buf);
-const code = Buffer.concat(buf.render());
+  body(asm);
 
-const memory = Buffer.alloc(0x20000);
-code.copy(memory);
+  const buf = new WBuf();
+  asm.render(buf);
+  const code = Buffer.concat(buf.render());
 
-const thread = new Interpreter.Thread(memory, 0);
+  const memory = Buffer.alloc(0x20000);
+  code.copy(memory);
 
-const COUNT = 1e8;
+  const thread = new Interpreter.Thread(memory, 0);
 
-const start = +new Date;
-for (let i = 0; i < COUNT; i++)
-  thread.runOne();
-const end = +new Date;
+  const COUNT = count;
 
-console.log('ops/sec: %d', COUNT / (end - start) * 1000);
+  const start = +new Date;
+  for (let i = 0; i < COUNT; i++)
+    thread.runOne();
+  const end = +new Date;
+
+  console.log('name: %j ops/sec: %d', name, COUNT / (end - start) * 1000);
+}
+
+run('hlt', 1e7, (asm) => {
+  asm.jalr('r0', 'r0');
+});
+
+run('sw', 1e7, (asm) => {
+  asm.movi('r1', 0x2000);
+  asm.sw('r1', 'r1', 0);
+  asm.beq('r0', 'r0', -2);
+});
+
+run('lw', 1e7, (asm) => {
+  asm.movi('r1', 0x2000);
+  asm.lw('r1', 'r1', 0);
+  asm.beq('r0', 'r0', -2);
+});
