@@ -104,13 +104,4 @@ describe('Interpreter', () => {
     assert(success);
     assert.equal(interpreter.memory.readUInt16LE(0x2000 + 0x10), 0);
   });
-
-  test('concurrency', (asm) => {
-    asm.movi('r1', 0x2000);
-    asm.movi('r2', 0xc07f);
-    asm.irq('yield');
-    asm.sw('r2', 'r1', 0);
-  }, (asm) => {
-    asm.irq('success');
-  });
 });
