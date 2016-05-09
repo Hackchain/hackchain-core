@@ -97,6 +97,40 @@ describe('Chain', () => {
     ], done);
   });
 
+  it('should pools tx', (done) => {
+    const tx1 = new TX();
+    tx1.output(new BN(1), new TX.Script());
+    const tx2 = new TX();
+    tx2.output(new BN(2), new TX.Script());
+
+    const txs = [ tx1, tx2 ];
+
+    async.waterfall([
+      (callback) => {
+        async.forEach(txs, (tx, callback) => {
+          chain.storePoolTX(tx, callback);
+        }, callback);
+      },
+      (callback) => {
+        chain.getPoolTXs(callback);
+      },
+      (poolTXs, callback) => {
+        assert.equal(poolTXs.length, 2);
+        for (let i = 0; i < txs.length; i++)
+          assert.deepEqual(poolTXs[i].hash(), txs[i].hash());
+        chain.removePoolTX(txs[0].hash(), callback);
+      },
+      (callback) => {
+        chain.getPoolTXs(callback);
+      },
+      (poolTXs, callback) => {
+        assert.equal(poolTXs.length, 1);
+        assert.deepEqual(poolTXs[0].hash(), txs[1].hash());
+        callback(null);
+      }
+    ], done);
+  });
+
   it('should verify coinbase-only block', (done) => {
     const block = new Block(hackchain.constants.genesis);
     const tx = new TX();
