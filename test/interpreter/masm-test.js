@@ -129,6 +129,22 @@ describe('Interpreter/Macro-Assembler', () => {
     ]);
   });
 
+  it('should generate backward `beq`', () => {
+    const label = asm.bind();
+    asm.beq('r0', 'r0', label);
+
+    check([ { type: 'beq', a: 0, b: 0, imm: -1 } ]);
+  });
+
+  it('should generate forward `beq`', () => {
+    const label = asm.label();
+    asm.beq('r0', 'r0', label);
+
+    asm.bind(label);
+
+    check([ { type: 'beq', a: 0, b: 0, imm: 0 } ]);
+  });
+
   describe('named labels', () => {
     it('should generate named `jump`', () => {
       asm.jmp('lbl');
