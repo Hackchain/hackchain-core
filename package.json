@@ -1,6 +1,6 @@
 {
   "name": "hackchain-core",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "core module for hackchain",
   "main": "lib/core.js",
   "scripts": {
