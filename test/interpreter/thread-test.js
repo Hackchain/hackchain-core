@@ -129,33 +129,33 @@ describe('Interpreter/Thread', () => {
 
   describe('lui', () => {
     test('it should not change value of `r0`', (asm) => {
-      asm.lui('r0', 1);
+      asm.lui('r0', 0x1000);
       asm.irq('success');
     }, (thread) => {
       assert.equal(thread.regs[0], 0);
     });
 
     test('it should change value of `r1`', (asm) => {
-      asm.lui('r1', 135);
+      asm.lui('r1', 0x2100);
       asm.irq('success');
     }, (thread) => {
-      assert.equal(thread.regs[1], 0x21c0);
+      assert.equal(thread.regs[1], 0x2100);
     });
   });
 
   describe('sw', () => {
     test('it should change memory', (asm) => {
-      asm.lui('r1', 135);
+      asm.lui('r1', 0x2100);
       asm.sw('r1', 'r0', 14);
       asm.irq('success');
     }, (thread) => {
-      assert.equal(memory.readUInt16LE(28), 0x21c0);
+      assert.equal(memory.readUInt16LE(28), 0x2100);
     });
   });
 
   describe('lw', () => {
     test('it should not change value of `r0`', (asm) => {
-      asm.lui('r1', 135);
+      asm.lui('r1', 0x1000);
       asm.sw('r1', 'r0', 14);
       asm.lw('r0', 'r0', 14);
       asm.irq('success');
@@ -164,14 +164,14 @@ describe('Interpreter/Thread', () => {
     });
 
     test('it should change value of `r1`', (asm) => {
-      asm.lui('r1', 135);
+      asm.lui('r1', 0x2100);
       asm.sw('r1', 'r0', 14);
       asm.add('r1', 'r0', 'r0');
 
       asm.lw('r1', 'r0', 14);
       asm.irq('success');
     }, (thread) => {
-      assert.equal(thread.regs[1], 0x21c0);
+      assert.equal(thread.regs[1], 0x2100);
     });
   });
 

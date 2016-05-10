@@ -75,7 +75,7 @@ describe('Interpreter/Macro-Assembler', () => {
     asm.bind(label);
 
     check([
-      { type: 'lui', a: 1, imm: 64 },
+      { type: 'lui', a: 1, imm: 0x1000 },
       { type: 'addi', a: 1, b: 1, imm: 4 },
       { type: 'jalr', a: 0, b: 1 },
       { type: 'add', a: 0, b: 0, c: 0 }
@@ -86,8 +86,8 @@ describe('Interpreter/Macro-Assembler', () => {
     asm.movi('r1', 0x1358);
 
     check([
-      { type: 'lui', a: 1, imm: 77 },
-      { type: 'addi', a: 1, b: 1, imm: 24 }
+      { type: 'lui', a: 1, imm: 0x1340 },
+      { type: 'addi', a: 1, b: 1, imm: 0x18 }
     ]);
   });
 
@@ -113,7 +113,7 @@ describe('Interpreter/Macro-Assembler', () => {
     asm.lea('r1', 'lbl');
 
     check([
-      { type: 'lui', a: 1, imm: 64 },
+      { type: 'lui', a: 1, imm: 0x1000 },
       { type: 'addi', a: 1, b: 1, imm: 1 }
     ]);
   });
@@ -124,7 +124,7 @@ describe('Interpreter/Macro-Assembler', () => {
     asm.bind('lbl');
 
     check([
-      { type: 'lui', a: 1, imm: 64 },
+      { type: 'lui', a: 1, imm: 0x1000 },
       { type: 'addi', a: 1, b: 1, imm: 2 }
     ]);
   });

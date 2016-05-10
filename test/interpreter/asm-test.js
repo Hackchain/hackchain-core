@@ -56,16 +56,19 @@ describe('Interpreter/Assembler', () => {
   });
 
   it('should generate `lui`', () => {
-    asm.lui('r1', 0x300);
+    asm.lui('r1', 0xc000);
     check('6700');
   });
 
   it('should check range of immediate in `lui`', () => {
     assert.throws(() => {
-      asm.lui('r1', 0x3000);
+      asm.lui('r1', 0x3);
     });
     assert.throws(() => {
-      asm.lui('r1', -0x3000);
+      asm.lui('r1', -0x3);
+    });
+    assert.throws(() => {
+      asm.lui('r1', 0x30000);
     });
   });
 
