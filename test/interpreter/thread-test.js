@@ -36,8 +36,10 @@ describe('Interpreter/Thread', () => {
 
       const MAX = 1000;
       let i;
-      for (i = 0; i < MAX && !thread.isDone(); i++)
+      for (i = 0; i < MAX && !thread.isDone(); i++) {
         thread.runOne();
+        thread.commitMemory();
+      }
 
       const success = i < MAX;
 

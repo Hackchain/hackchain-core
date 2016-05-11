@@ -25,8 +25,10 @@ function run(name, count, body) {
   const COUNT = count;
 
   const start = +new Date;
-  for (let i = 0; i < COUNT; i++)
+  for (let i = 0; i < COUNT; i++) {
     thread.runOne();
+    thread.commitMemory();
+  }
   const end = +new Date;
 
   console.log('name: %j ops/sec: %d', name, COUNT / (end - start) * 1000);
